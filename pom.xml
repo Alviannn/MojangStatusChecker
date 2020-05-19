@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.alviannn</groupId>
-    <artifactId>MojangStatus</artifactId>
+    <artifactId>MojangStatusChecker</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
@@ -21,7 +21,7 @@
     </developers>
 
     <build>
-        <finalName>MojangStatusChecker</finalName>
+        <finalName>MojangStatusChecker-${project.version}</finalName>
         <defaultGoal>clean package</defaultGoal>
         <sourceDirectory>src/main/java</sourceDirectory>
 
