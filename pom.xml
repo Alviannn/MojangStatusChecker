@@ -21,7 +21,7 @@
     </developers>
 
     <build>
-        <finalName>${artifactId}</finalName>
+        <finalName>MojangStatusChecker</finalName>
         <defaultGoal>clean package</defaultGoal>
         <sourceDirectory>src/main/java</sourceDirectory>
 

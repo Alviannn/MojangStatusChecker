@@ -30,7 +30,7 @@ public class Main extends Application {
         parent = FXMLLoader.load(getResource("app.fxml"));
         primaryStage = stage;
 
-        primaryStage.setTitle("Mojang Status");
+        primaryStage.setTitle("Mojang Status Checker");
         primaryStage.getIcons().add(icon);
         primaryStage.setScene(new Scene(parent, 800, 600));
         primaryStage.setResizable(false);
