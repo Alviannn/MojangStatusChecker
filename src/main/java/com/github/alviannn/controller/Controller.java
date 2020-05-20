@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -22,6 +23,9 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Controller {
 
     @FXML private Label fetch_status_text;
+    @FXML private JFXButton reset_button;
+
+    private CompletableFuture<JsonObject> fetchTask;
 
     @FXML private ImageView minecraft_net;
     @FXML private ImageView session_minecraft;
@@ -32,16 +36,22 @@ public class Controller {
     @FXML private ImageView textures_minecraft;
     @FXML private ImageView mojang_com;
 
-    public void reloadButton() {
+    public void refreshAction() {
+        if (fetchTask != null && !fetchTask.isDone())
+            return;
+
         fetch_status_text.setText("FETCHING DATA...");
+        reset_button.setText("CANCEL");
         AtomicLong time = new AtomicLong(0L);
 
-        Main.supplyAsync(() -> {
+        this.fetchTask = Main.supplyAsync(() -> {
             time.set(System.currentTimeMillis());
             return this.fetchStatus().join();
         }).whenComplete((result, error) -> {
+            reset_button.setText("RESET");
+
             if (error != null) {
-                this.resetButton();
+                this.resetAction();
                 fetch_status_text.setText("FAILED TO FETCH!");
                 return;
             }
@@ -59,7 +69,12 @@ public class Controller {
         });
     }
 
-    public void resetButton() {
+    public void resetAction() {
+        if (reset_button.getText().equals("CANCEL")) {
+            fetchTask.cancel(true);
+            reset_button.setText("RESET");
+        }
+
         minecraft_net.setImage(Main.getImage("images/status/grey.png"));
         session_minecraft.setImage(Main.getImage("images/status/grey.png"));
         account_mojang.setImage(Main.getImage("images/status/grey.png"));
@@ -72,6 +87,11 @@ public class Controller {
         fetch_status_text.setText("");
     }
 
+    /**
+     * fetches the mojang status from the website
+     *
+     * @return a JSON object
+     */
     private CompletableFuture<JsonObject> fetchStatus() {
         return CompletableFuture.supplyAsync(() -> {
             JsonArray array;

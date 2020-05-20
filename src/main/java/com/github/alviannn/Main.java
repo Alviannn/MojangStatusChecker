@@ -21,13 +21,13 @@ public class Main extends Application {
 
     @Getter private static Parent parent;
     @Getter private static Stage primaryStage;
-    @Getter private final static Image icon = new Image(String.valueOf(getResource("images/mojang_logo.png")));
+    @Getter private final static Image icon = Main.getImage("images/mojang_logo.png");
     @Getter private static final ExecutorService threadPool = Executors.newCachedThreadPool();
 
     @SneakyThrows
     @Override
     public void start(Stage stage) {
-        parent = FXMLLoader.load(getResource("app.fxml"));
+        parent = FXMLLoader.load(Main.getResource("app.fxml"));
         primaryStage = stage;
 
         primaryStage.setTitle("Mojang Status Checker");
@@ -47,10 +47,16 @@ public class Main extends Application {
         return Main.class.getClassLoader().getResource(path);
     }
 
+    /**
+     * gets an image from the resources
+     */
     public static Image getImage(String path) {
-        return new Image(String.valueOf(getResource(path)));
+        return new Image(String.valueOf(Main.getResource(path)));
     }
 
+    /**
+     * @see CompletableFuture#supplyAsync(Supplier)
+     */
     public static <T> CompletableFuture<T> supplyAsync(Supplier<T> supplier) {
         Task<T> task = new Task<T>() {
             @Override
@@ -69,6 +75,9 @@ public class Main extends Application {
         return result;
     }
 
+    /**
+     * @see CompletableFuture#runAsync(Runnable)
+     */
     public static CompletableFuture<Void> runAsync(Runnable runnable) {
         Task<Void> task = new Task<Void>() {
             @Override
